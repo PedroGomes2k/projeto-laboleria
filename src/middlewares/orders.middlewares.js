@@ -1,6 +1,30 @@
-import { findCakeId, findClientId } from "../repository/order.repository.js"
+import { findCakeId, findClientId, findOrderByDate, findOrders } from "../repository/order.repository.js"
 
 export async function validateOrders(req, res, next) {
+
+    const { date } = req.body
+
+    let orders = []
+
+    if (date) {
+        orders = await findOrderByDate(date)
+        console.log(orders)
+        
+    } else {
+        orders = await findOrders()
+        console.log(orders)
+    }
+    if (orders.length === 0) return res.status(404).send([])
+
+
+    orders = orders.map(o => o.allOrders)
+
+    res.locals.body = orders
+
+    next()
+}
+
+export async function validateOrder(req, res, next) {
 
     const { clientId, cakeId, quantity } = req.body
 
@@ -23,12 +47,12 @@ export async function validateOrders(req, res, next) {
 export async function validateOrdersById(req, res, next) {
 
     const { id } = req.params
-   
+
     try {
 
         const find = await findClientId(id)
-        if(!find) return res.status(404).send({message: "O id não existe"})
-    
+        if (!find) return res.status(404).send({ message: "O id não existe" })
+
         next()
 
     } catch (err) {

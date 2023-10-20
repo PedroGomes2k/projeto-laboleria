@@ -19,9 +19,8 @@ export async function postOrder(req, res) {
 export async function getOrders(req, res) {
 
     try {
-        const orders = await findOrders()
 
-        res.status(200).send(orders)
+        res.status(200).send(res.locals.body)
 
     } catch (err) {
         return res.status(500).send(err.message)
