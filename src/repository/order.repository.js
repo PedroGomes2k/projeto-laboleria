@@ -38,7 +38,6 @@ export async function createOrder(clientId, cakeId, quantity, totalPrice) {
 export async function findOrders() {
 
     const result = await db.query(templateCode)
-
     return result.rows
 
 }
